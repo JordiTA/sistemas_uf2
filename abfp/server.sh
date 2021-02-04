@@ -40,6 +40,14 @@ if [ "$HANDSHAKE" != "THIS_IS_MY_CLASSROOM"]; then
 	exit 1
 fi
 
+echo "(8) RESPONSE.DOS"
 
+sleep 1
+echo "YES_IT_IS" | nc -q 1 $IP_CLIENT $PORT
+
+
+echo "(9) LISTEN"
+
+FILENAME=`nc -q 1 $IP_CLIENT $PORT`
 
 exit 0
