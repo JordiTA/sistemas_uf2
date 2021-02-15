@@ -36,7 +36,38 @@ if ["$RESPONSEDOS" != "YES_IT_IS"]; then
     exit 1        
 fi
 
+
 echo "(10) FILE NAME"
 
-echo "FILE_NAME MAGNO.JPG" | nc -q 1 $IP_SERVER $PORT
+MD5=`md5sum "salida.sh" | cut -d " " -f  2`  
+echo "FILE_NAME salida.sh $MD5" | nc -q 1 $IP_SERVER $PORT
+
+echo "(11) LISTEN"
+RESPONSETRES=`nc -l -p $PORT`
+
+if [ "$RESPONSETRES" != "OK" ]; then
+echo "Error en el nombre del archivo"
+exit 3
+fi
+
+
+echo "(14) DATA"
+
+sleep 1 
+echo "`cat "salida.sh" | nc -q 1 $IP_SERVER $PORT`"
+
+echo "(15) LISTEN"
+RESPONSECUATRO=`nc -l -p $PORT`
+
+if [ "$RESPONSECUATRO" != "OK_DATA" ]; then
+    echo "Error al enviar DATA"
+    exit 1
+fi
+
+
+echo "(18) DESPEDIDA"
+
+sleep 1
+echo "ABFP GOOD_BYE" | nc -q 1 $IP_SERVER $PORT
+
 exit 0

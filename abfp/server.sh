@@ -28,6 +28,7 @@ fi
 
 echo "OK_CONN" | nc -q 1 $IP_CLIENT $PORT
 
+
 echo "(5) LISTEN"
 HANDSHAKE=`nc -l -p $PORT`
 
@@ -40,6 +41,7 @@ if [ "$HANDSHAKE" != "THIS_IS_MY_CLASSROOM"]; then
 	exit 1
 fi
 
+
 echo "(8) RESPONSE.DOS"
 
 sleep 1
@@ -47,7 +49,32 @@ echo "YES_IT_IS" | nc -q 1 $IP_CLIENT $PORT
 
 
 echo "(9) LISTEN"
-
 FILENAME=`nc -q 1 $IP_CLIENT $PORT`
+
+NAME=`echo $FILE_NAME | cut -d " " -f 2`
+MD5_NAME=`echo $FILE_NAME | cut -d " " -f 3`
+
+
+echo "(12) RESPONSE"
+
+MD5=`md5sum $NAME | cut -d " " -f 2`
+
+if [ "$MD5" != "$MD5_NAME" ]; then 
+    echo "Error en el nombre del archivo"
+    
+    sleep 1
+    echo "KO_FILE_NAME" | nc -q 1 $IP_CLIENT $PORT
+    exit 1
+fi
+
+sleep 1
+echo "OK_FILE_NAME" | nc -q 1 $IP_CLIENT $PORT
+
+
+echo "(13) LISTEN"
+`nc -l -p $PORT` > entrada.sh
+
+cat entrada.sh
+echo "(16) RESPONSE"
 
 exit 0
